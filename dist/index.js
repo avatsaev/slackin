@@ -61,11 +61,10 @@ var _log2 = _interopRequireDefault(_log);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// their code
-var emailCheck = require('email-check');
-
 // our code
-// es6 runtime requirements
+
+
+// their code
 function slackin(_ref) {
   var token = _ref.token;
   var _ref$interval = _ref.interval;
@@ -196,6 +195,13 @@ function slackin(_ref) {
 
     /////////////////////////////////////////////////////////////////////////
 
+
+    var captcha_data = {
+      secret: gcaptcha_secret,
+      response: captcha_response,
+      remoteip: req.connection.remoteAddress
+    };
+
     var captcha_callback = function captcha_callback(err, resp) {
 
       if (err) {
@@ -226,24 +232,7 @@ function slackin(_ref) {
       }
     };
 
-    var email_check_callback = function email_check_callback(email_is_valid) {
-
-      if (email_is_valid) {
-
-        var captcha_data = {
-          secret: gcaptcha_secret,
-          response: captcha_response,
-          remoteip: req.connection.remoteAddress
-        };
-
-        _superagent2.default.post('https://www.google.com/recaptcha/api/siteverify').type('form').send(captcha_data).end(captcha_callback);
-      } else {
-
-        return res.status(200).json({ msg: 'WOOT. Check your email!!' });
-      }
-    };
-
-    emailCheck(email).then(email_check_callback);
+    _superagent2.default.post('https://www.google.com/recaptcha/api/siteverify').type('form').send(captcha_data).end(captcha_callback);
   });
 
   // iframe
@@ -294,4 +283,4 @@ function slackin(_ref) {
   });
 
   return srv;
-}
+} // es6 runtime requirements
